@@ -21,19 +21,22 @@ float triIncrement = 0.005f;
 static const char *vShader =
     "#version 330\n"
     "layout (location = 0) in vec3 pos;\n"
+    "out vec4 vCol;\n"
     "uniform mat4 model;\n"
     "void main()\n"
     "{\n"
     "gl_Position = model * vec4(pos, 1.0);\n"
+    "vCol = vec4(clamp(pos, 0.0, 1.0), 1.0);\n"
     "}\n";
 
 // Fragment shader
 static const char *fShader =
     "#version 330\n"
+    "in vec4 vCol;\n"
     "out vec4 colour;\n"
     "void main()\n"
     "{\n"
-    "colour = vec4(1.0, 0.0, 1.0, 1.0);\n"
+    "colour = vCol;\n"
     "}\n";
 
 void createTriangle()

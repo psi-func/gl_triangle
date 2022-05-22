@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenGL_cource)
+project(OpenGL_course)
 
 find_package(OpenGL REQUIRED)
 

@@ -5,8 +5,19 @@ find_package(OpenGL REQUIRED)
 
 include_directories(external/glew-2.1.0/include)
 
-add_executable(setup main.cpp)
-target_link_libraries(setup PUBLIC glfw glew glm)
+set(SUITE1 colorpyramid)
+
+add_executable(${SUITE1}
+        main.cpp
+        Shader.cpp Shader.h
+        Window.cpp Window.h
+        Mesh.cpp Mesh.h
+        )
+target_link_libraries(${SUITE1} PUBLIC glfw glew glm)
+set_target_properties(${SUITE1} PROPERTIES
+        CXX_STANDARD_REQUIRED ON
+        CXX_STANDARD 17
+        )
 
 set(GLFW_BUILD_EXAMPLES OFF)
 set(BUILD_SHARED_LIBS  ON)
@@ -18,3 +29,5 @@ set(GLFW_VULKAN_STATIC OFF)
 add_subdirectory(external/glfw-3.3.7)
 add_subdirectory(external/glew-2.1.0/build/cmake)
 add_subdirectory(external/glm)
+
+file(COPY Shaders DESTINATION ${CMAKE_BINARY_DIR})

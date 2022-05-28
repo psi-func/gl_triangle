@@ -53,7 +53,7 @@ void createShaders() {
 int main(int argc, char const *argv[])
 {
     Window::initEnviron();
-    auto mainwindow =  Window::CreateWindow(WIDTH, HEIGHT, "simple window").value();
+    Window mainwindow(WIDTH, HEIGHT, "simple window");
     createObjects();
     createShaders();
 

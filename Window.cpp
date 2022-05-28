@@ -6,9 +6,15 @@
 #include <iostream>
 #include <algorithm>
 
-Window::Window(GLFWwindow* windowPtr) :
-    _window(windowPtr)
+Window::Window(GLint width, GLint  height, const std::string& title)
 {
+    _window=  glfwCreateWindow(width, height,
+                                          title.data(), nullptr, nullptr);
+    if (!_window) {
+        std::cerr << "GLFW window creation fails!";
+        glfwTerminate();
+    }
+
     keys.fill(false);
 
     glfwGetFramebufferSize(_window, &bufferWidth, &bufferHeight);
@@ -17,7 +23,9 @@ Window::Window(GLFWwindow* windowPtr) :
     glfwMakeContextCurrent(_window);
 
     glewExperimental = GL_TRUE;
-    if (glewInit())
+
+    auto GLEWstatus = glewInit();
+    if (GLEWstatus != GLEW_OK)
     {
         std::cerr << "GLEW init fails!\n";
         glfwTerminate();
@@ -45,18 +53,6 @@ void Window::initEnviron() {
     // allow forward compatibility
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-}
-
-std::optional<Window> Window::CreateWindow(GLint width, GLint  height, const std::string& title) {
-    GLFWwindow *window = glfwCreateWindow(width, height,
-                                              title.data(), nullptr, nullptr);
-    if (!window) {
-        std::cerr << "GLFW window creation fails!";
-        glfwTerminate();
-        return std::nullopt;
-    }
-
-    return std::optional<Window>(window);
 }
 
 void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode) {
@@ -88,5 +84,4 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
 Window::~Window() {
     glfwDestroyWindow(_window);
     glfwTerminate();
-
 }

@@ -7,14 +7,13 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <memory>
+
 #include <string>
-#include <optional>
 #include <array>
 
 class Window {
 public:
-    explicit Window(GLFWwindow* window);
+    Window(GLint width, GLint  height, const std::string& title);
     ~Window();
     Window(Window&&) noexcept = default;
     Window& operator=(Window&&) noexcept = default;
@@ -24,11 +23,10 @@ public:
     bool shouldClose() { return glfwWindowShouldClose(_window); }
     void swapBuffers() { glfwSwapBuffers(_window); }
 
-    static void initEnviron();
-    static std::optional<Window> CreateWindow(GLint width, GLint  height, const std::string& title);
+    static void initEnviron();;
 
 private:
-    GLFWwindow* _window;
+    GLFWwindow* _window{nullptr};
 //    GLint _width, _height;
     GLint bufferWidth{}, bufferHeight{};
 

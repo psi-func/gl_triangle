@@ -8,9 +8,11 @@
 #include <iostream>
 #include <sstream>
 
-Shader::Shader(std::string vShaderPath, std::string fShaderPath) {
-    compileShaders(Shader::readShaderFromFile(std::move(vShaderPath)),
-                   Shader::readShaderFromFile(std::move(fShaderPath)));
+Shader::Shader(const std::string& vShaderPath, const std::string& fShaderPath) {
+    compileShaders(
+                Shader::readShaderFromFile(vShaderPath),
+                   Shader::readShaderFromFile(fShaderPath)
+                   );
 }
 
 
@@ -36,7 +38,7 @@ std::string Shader::readShaderFromFile(const std::string& path) {
 void Shader::addShader(std::string shaderCode, GLenum shaderType) const {
     GLuint theShader = glCreateShader(shaderType);
     const GLchar *theCode = shaderCode.data();
-    const GLint codeLength = shaderCode.size();
+    const auto codeLength = static_cast<GLint>(shaderCode.size());
 
     glShaderSource(theShader, 1, std::addressof(theCode), std::addressof(codeLength));
     glCompileShader(theShader);

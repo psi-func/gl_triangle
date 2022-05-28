@@ -10,29 +10,31 @@
 #include <memory>
 #include <string>
 #include <optional>
+#include <array>
 
 class Window {
 public:
-    ~Window() = default;
+    explicit Window(GLFWwindow* window);
+    ~Window();
     Window(Window&&) noexcept = default;
     Window& operator=(Window&&) noexcept = default;
 
-    GLint  getBufferWidth() { return bufferWidth; }
-    GLint  getBufferHeight() { return bufferHeight; }
-    bool shouldClose() { return glfwWindowShouldClose(_window.get()); }
-    void swapBuffers() { glfwSwapBuffers(_window.get()); }
-    Window(GLFWwindow* window);
+    [[nodiscard]] GLint  getBufferWidth() const { return bufferWidth; }
+    [[nodiscard]] GLint  getBufferHeight() const { return bufferHeight; }
+    bool shouldClose() { return glfwWindowShouldClose(_window); }
+    void swapBuffers() { glfwSwapBuffers(_window); }
 
     static void initEnviron();
     static std::optional<Window> CreateWindow(GLint width, GLint  height, const std::string& title);
 
 private:
-
-private:
-    using windowPtr = std::unique_ptr<GLFWwindow, decltype(&glfwDestroyWindow)>;
-    windowPtr _window;
+    GLFWwindow* _window;
 //    GLint _width, _height;
-    int bufferWidth, bufferHeight;
+    GLint bufferWidth{}, bufferHeight{};
+
+    std::array<bool, 1024> keys{};
+
+    static void handleKeys(GLFWwindow* window, int key, int code, int action, int mode);
 };
 
 

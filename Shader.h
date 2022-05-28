@@ -17,7 +17,7 @@ enum class MAT_TYPE {
 
 class Shader {
 public:
-    Shader(std::string vShaderPath, std::string fShaderPath);
+    Shader(const std::string& vShaderPath, const std::string& fShaderPath);
     ~Shader() = default;
 
     void useShader() const { glUseProgram(_shaderId); }

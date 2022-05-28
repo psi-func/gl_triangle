@@ -4,14 +4,17 @@
 
 #include "Window.h"
 #include <iostream>
+#include <algorithm>
 
 Window::Window(GLFWwindow* windowPtr) :
-    _window(windowPtr, glfwDestroyWindow)
+    _window(windowPtr)
 {
-    glfwGetFramebufferSize(_window.get(), &bufferWidth, &bufferHeight);
+    keys.fill(false);
+
+    glfwGetFramebufferSize(_window, &bufferWidth, &bufferHeight);
 
     // set context to GLEW to use
-    glfwMakeContextCurrent(_window.get());
+    glfwMakeContextCurrent(_window);
 
     glewExperimental = GL_TRUE;
     if (glewInit())
@@ -21,10 +24,11 @@ Window::Window(GLFWwindow* windowPtr) :
     }
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, bufferWidth, bufferHeight);
+
+    glfwSetWindowUserPointer(_window, this);
 }
 
 void Window::initEnviron() {
-    //  init glfw
     //  init glfw
     if (!glfwInit())
     {
@@ -46,12 +50,43 @@ void Window::initEnviron() {
 std::optional<Window> Window::CreateWindow(GLint width, GLint  height, const std::string& title) {
     GLFWwindow *window = glfwCreateWindow(width, height,
                                               title.data(), nullptr, nullptr);
-    if (!window)
-    {
+    if (!window) {
         std::cerr << "GLFW window creation fails!";
         glfwTerminate();
         return std::nullopt;
     }
 
     return std::optional<Window>(window);
+}
+
+void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int mode) {
+    auto theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024) {
+
+        if (action == GLFW_PRESS) {
+            theWindow->keys[key] = true;
+#ifdef _DEBUG
+            std::cout << "Pressed: " << key << '\n';
+#endif
+        }
+        else if (action == GLFW_RELEASE){
+            theWindow->keys[key] = false;
+#ifdef _DEBUG
+            std::cout << "Released: " << key << '\n';
+#endif
+        }
+    }
+
+}
+
+Window::~Window() {
+    glfwDestroyWindow(_window);
+    glfwTerminate();
+
 }

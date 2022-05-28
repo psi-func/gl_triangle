@@ -9,7 +9,7 @@
 
 class Mesh {
 public:
-    Mesh(GLfloat* vertices, unsigned int* indoces, unsigned int numOfVertices, unsigned int numOfIndices);
+    Mesh(GLfloat* vertices, unsigned int* indices, unsigned int numOfVertices, unsigned int numOfIndices);
     ~Mesh() = default;
     void RenderMesh() const;
 private:
